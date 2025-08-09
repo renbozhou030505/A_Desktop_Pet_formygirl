@@ -1,0 +1,28 @@
+{
+    "name": "\u7ecf\u5178\u5c0f\u72d7",
+    "author": "AI & You",
+    "version": "1.0",
+    "size": [
+        60,
+        60
+    ],
+    "animation_interval": 33,
+    "states": [
+        {
+            "name": "standing",
+            "loop": true
+        },
+        {
+            "name": "running",
+            "loop": true
+        },
+        {
+            "name": "sleeping",
+            "loop": true
+        },
+        {
+            "name": "interacting",
+            "loop": true
+        }
+    ]
+}

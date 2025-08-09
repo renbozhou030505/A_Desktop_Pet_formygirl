@@ -1,0 +1,14 @@
+{
+    "name": "水晶史莱姆",
+    "author": "AI & You",
+    "version": "2.0",
+    "size": [256, 256],
+    "animation_interval": 120,
+    "states": [
+        {"name": "standing", "loop": true},
+        {"name": "running", "loop": true},
+        {"name": "sitting", "loop": false},
+        {"name": "sleeping", "loop": true},
+        {"name": "interacting", "loop": false, "duration": 3000}
+    ]
+}
