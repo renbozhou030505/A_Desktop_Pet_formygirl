@@ -20,9 +20,20 @@ RANDOM_CARE_INTERVAL = 30 * 60 * 1000      # 30 minutes
 
 # Special dates ("Month-Day": "Message")
 SPECIAL_DATES = {
-    "01-01": "新年快乐！新的一年也要元气满满哦！",
-    "02-14": "无论是自己还是和别人过，今天都要开心呀，情人节快乐！(｡･ω･｡)ﾉ♡",
-    "12-25": "Merry Christmas! 圣诞快乐！♪(･ω･)ﾉ",
+    "01-01": "新年快乐，希望我能陪你度过一年又一年",
+    "02-14": "情人节快乐,亲爱的阳阳♡",
+    "12-25": "Merry Christmas!",
     # Add your own special date here!
-    "08-08": "这是一个只属于我们的秘密纪念日，要永远开心哦！"
+    "08-12": "今天是我的生日哦，记得给我庆祝哦！"
 }
+
+# --- Weather Feature Settings ---
+WEATHER_ENABLED = True
+# 填入你在和风天气申请的API Key
+WEATHER_API_KEY = "" 
+# 用户的默认城市，这里需要城市的Location ID，而不是中文名。
+# 你可以在 https://github.com/qwd/LocationList/blob/master/China-City-List-latest.csv 找到
+# 例如，北京的ID是 "101010100"
+USER_CITY_ID = "" 
+# 天气更新频率（单位：毫秒），例如每小时更新一次
+WEATHER_UPDATE_INTERVAL = 60 * 60 * 1000
