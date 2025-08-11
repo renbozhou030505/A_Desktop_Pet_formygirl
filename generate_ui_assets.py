@@ -1,31 +1,57 @@
-# generate_ui_assets.py (Artist Edition)
+# generate_ui_assets.py (Upgraded for 9-Patch Scaling)
 import os
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw
 
 ASSET_DIR = "assets"
-IMAGE_NAME = "bubble_background.png"
-CANVAS_SIZE = (80, 60); CORNER_RADIUS = 15; TAIL_HEIGHT = 12; TAIL_WIDTH = 16
-SHADOW_COLOR = (0, 0, 0, 40); SHADOW_OFFSET = (1, 1); SHADOW_BLUR = 3
-BG_COLOR = "#FFFFFF"; BORDER_COLOR = "#4a4a4a"; BORDER_WIDTH = 2
+IMAGE_NAME = "bubble_background_template.png" # Use a new name to avoid confusion
 
-def generate_bubble_image():
-    if not os.path.exists(ASSET_DIR): os.makedirs(ASSET_DIR)
-    img = Image.new('RGBA', (CANVAS_SIZE[0] + SHADOW_BLUR*2, CANVAS_SIZE[1] + SHADOW_BLUR*2), (0,0,0,0))
+# --- Configuration for a scalable template ---
+# We define the size of the corners and the tail. The center part will be stretched.
+CORNER_RADIUS = 12
+TAIL_HEIGHT = 8
+TAIL_WIDTH = 12
+BORDER_WIDTH = 2
+# The canvas size is now calculated based on the core components
+CANVAS_WIDTH = CORNER_RADIUS * 2 + TAIL_WIDTH # A width that can contain corners and tail
+CANVAS_HEIGHT = CORNER_RADIUS * 2 + TAIL_HEIGHT
+
+BG_COLOR = "#FFFFFF"
+BORDER_COLOR = "#4a4a4a"
+
+def generate_bubble_template():
+    """
+    Generates a small, clean bubble template for use with CSS border-image.
+    This image is meant to be sliced and stretched, not used as-is.
+    """
+    if not os.path.exists(ASSET_DIR):
+        os.makedirs(ASSET_DIR)
+
+    # Create a transparent canvas
+    img = Image.new('RGBA', (CANVAS_WIDTH, CANVAS_HEIGHT), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
-    bubble_rect = (SHADOW_BLUR, SHADOW_BLUR, SHADOW_BLUR + CANVAS_SIZE[0] - 1, SHADOW_BLUR + CANVAS_SIZE[1] - TAIL_HEIGHT - 1)
+
+    # Define the rectangle for the main body of the bubble (without the tail)
+    bubble_rect = (0, 0, CANVAS_WIDTH - 1, CANVAS_HEIGHT - TAIL_HEIGHT - 1)
+
+    # Define the tail polygon, pointing downwards from the center
+    tail_x_center = CANVAS_WIDTH / 2
     tail_points = [
-        (bubble_rect[0] + CORNER_RADIUS, bubble_rect[3]),
-        (bubble_rect[0] + CORNER_RADIUS + TAIL_WIDTH / 2, bubble_rect[3] + TAIL_HEIGHT),
-        (bubble_rect[0] + CORNER_RADIUS + TAIL_WIDTH, bubble_rect[3])
+        (tail_x_center - TAIL_WIDTH / 2, bubble_rect[3]),
+        (tail_x_center, bubble_rect[3] + TAIL_HEIGHT),
+        (tail_x_center + TAIL_WIDTH / 2, bubble_rect[3])
     ]
-    mask = Image.new('L', img.size, 0); mask_draw = ImageDraw.Draw(mask)
-    mask_draw.rounded_rectangle(bubble_rect, radius=CORNER_RADIUS, fill=255); mask_draw.polygon(tail_points, fill=255)
-    shadow_layer = mask.filter(ImageFilter.GaussianBlur(radius=SHADOW_BLUR))
-    img.paste(Image.new('RGBA', img.size, SHADOW_COLOR), (SHADOW_OFFSET[0], SHADOW_OFFSET[1]), mask=shadow_layer)
-    draw.rounded_rectangle(bubble_rect, fill=BG_COLOR, outline=BORDER_COLOR, width=BORDER_WIDTH)
-    draw.polygon(tail_points, fill=BG_COLOR); draw.line([tail_points[0], tail_points[2]], fill=BORDER_COLOR, width=BORDER_WIDTH)
-    output_path = os.path.join(ASSET_DIR, IMAGE_NAME); img.save(output_path)
-    print(f"🎨 终极艺术气泡背景已生成: {output_path}")
+
+    # Draw the shape: rounded rectangle and tail
+    draw.rounded_rectangle(bubble_rect, radius=CORNER_RADIUS, fill=BG_COLOR, outline=BORDER_COLOR, width=BORDER_WIDTH)
+    draw.polygon(tail_points, fill=BG_COLOR)
+    # Draw the tail border lines manually
+    draw.line([tail_points[0], tail_points[1]], fill=BORDER_COLOR, width=BORDER_WIDTH)
+    draw.line([tail_points[1], tail_points[2]], fill=BORDER_COLOR, width=BORDER_WIDTH)
+
+    # Save the final template image
+    output_path = os.path.join(ASSET_DIR, IMAGE_NAME)
+    img.save(output_path)
+    print(f"🎨 可伸缩的气泡模板已生成: {output_path}")
 
 if __name__ == "__main__":
-    generate_bubble_image()
+    generate_bubble_template()
